@@ -1,8 +1,8 @@
-// server.js
 import express from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 import fs from 'fs';
+import axios from 'axios';
 
 cloudinary.config({ 
   cloud_name: 'review-site', 
@@ -46,6 +46,15 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
     // Log the Cloudinary result
     console.log('Cloudinary Upload Result:', result);
+
+    // Send data to ColdFusion API endpoint using Axios
+    const coldFusionUrl = 'http://your-coldfusion-server:port/your-cfc-endpoint';
+    const coldFusionResponse = await axios.post(coldFusionUrl, {
+      imageURL: result.url, // Adjust this based on what your ColdFusion API expects
+    });
+
+    // Log the ColdFusion response
+    console.log('ColdFusion Response:', coldFusionResponse.data);
 
     // Send back the Cloudinary URL
     res.send(`Image URL: ${result.url}`);
